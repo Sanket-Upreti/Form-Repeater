@@ -1,8 +1,8 @@
 <template>
-<div>
+  <div>
     <app-header> </app-header>
-  <div id="app">
-    <div class="top-div">
+    <div id="app">
+      <div class="top-div">
         <h1>{{ repeatingForm }}</h1>
       </div>
       <div class="mid-div">
@@ -13,17 +13,22 @@
               <label>Name </label>
               <input
                 type="text"
-                class="text"
+                class="pf"
                 v-model="formValue.name"
+                maxlength="17"
+                size="17"
                 required
               />
             </div>
-            <div class="for-name">
+            <div class="for-name-date">
               <label>Joined Date</label>
+              <br />
               <input
-                type="text"
-                class="text"
+                type="date"
+                class="forDate"
                 v-model="formValue.date"
+                @change="dateD(index)"
+                required
               />
             </div>
             <div class="for-name">
@@ -33,17 +38,9 @@
             <div class="for-name-ii">
               <label>Tier</label>
               <br />
-              <input
-                type="radio"
-                value="Junior"
-                v-model="formValue.tiers"
-              />
+              <input type="radio" value="Junior" v-model="formValue.tiers" />
               <label>Junior</label>
-              <input
-                type="radio"
-                value="Senior"
-                v-model="formValue.tiers"
-              />
+              <input type="radio" value="Senior" v-model="formValue.tiers" />
               <label>Senior</label>
             </div>
             <div class="for-name-ii">
@@ -72,6 +69,16 @@
                 >
               </select>
             </div>
+            <div class="for-name-pf">
+              <label>pf_id</label>
+              <input
+                type="text"
+                class="pf"
+                maxlength="4"
+                size="3"
+                v-model="formValue.pf"
+              />
+            </div>
             <div class="redButton">
               <button type="button" @click="delButton(index)">Delete</button>
             </div>
@@ -90,8 +97,7 @@
       </div>
     </div>
     <app-footer> </app-footer>
-
-    </div>
+  </div>
 </template>
 
 <script>
@@ -103,39 +109,70 @@ export default {
     "app-header": Header,
     "app-footer": Footer,
   },
-  data: function(){
-    return{
-       department: "Human Resource Management",
-        repeatingForm: "Repeating Forms",
-    formValues: [
-      {
-        name : "",
-         date: "",
-        content: "",
-        tiers: "",
-        englishLang: "",
-        frenchLang: "",
-        Department: "",
-        Departments: ["Marketing", "Creative", "Development"],
-       
-      },      
-    ],
-    }
+  data: function() {
+    return {
+      department: "Human Resource Management",
+      repeatingForm: "Repeating Forms",
+      index_values: [0],
+      formValues: [
+        {
+          name: "",
+          date: "",
+          content: "",
+          pf: 0,
+          tiers: "",
+          englishLang: "",
+          frenchLang: "",
+          Department: "",
+          Departments: ["Marketing", "Creative", "Development"],
+        },
+      ],
+    };
   },
-   methods: {
+  methods: {
     addForm: function() {
-      this.formValues.push({ name : "",
-         date: "",
+      this.formValues.push({
+        name: "",
+        date: "",
         content: "",
         tiers: "",
+        pf: 0,
         englishLang: "",
         frenchLang: "",
         Department: "",
         Departments: ["Marketing", "Creative", "Development"],
-        });
+      });
     },
     delButton: function(id) {
       this.formValues.splice(id, 1);
+    },
+    dateD: function(index) {
+      // var date = new Date(this.formValues[index].date);
+      // var fixMonth = String(date.getMonth() + 1).padStart(2, "0");
+      // var fixDay = String(date.getDate()).padStart(2, "0");
+      // var todayDate =
+      //   String(date.getFullYear()) + "-" + fixMonth + "-" + fixDay;
+      // if (todayDate == this.formValues[index].date) {
+      //   this.formValues[index].pf += 1;
+      // } else {
+      //   this.formValues[index].pf = 0;
+      // }
+      this.formValues[index].pf = index;
+      var date = new Date(this.formValues[index].date);
+      var today = new Date();
+      if (Math.floor((today - date) / (1000 * 60 * 60 * 24 * 30)) > 6) {
+        this.formValues[index].pf = 1 + Math.max(...this.index_values);
+      } else {
+        this.formValues[index].pf = 0;
+        // }
+        // if (Math.floor((today - date) / (1000 * 60 * 60 * 24 * 30)) > 6) {
+        //   this.formValues[index].pf++;
+        // } else {
+        //   this.formValues[index].pf = "No";
+        // }
+        // console.log(Math.floor((today - date) / (1000 * 60 * 60 * 24 * 30)));
+      }
+      this.index_values.push(this.formValues[index].pf);
     },
   },
 };
@@ -186,16 +223,28 @@ hr {
 form {
   display: flex;
   margin-top: 2%;
-  justify-content: space-evenly;
+  overflow: auto;
+  justify-content: space-between;
 }
 
 .for-name {
+  max-width: 130px;
+}
+
+.for-name-date {
+  max-width: 180px;
+}
+
+.for-name-pf {
   max-width: 150px;
-  display: block;
 }
 
 input[type="radio"] {
   margin: 0px 10px;
+}
+
+.pf {
+  margin-left: 2%;
 }
 
 input[type="checkbox"] {
@@ -226,8 +275,16 @@ label {
   margin-top: 2%;
 }
 
+.add-form-confirm button {
+  background: #36c6d3;
+  border: 1px solid #36c6d3;
+  color: aliceblue;
+  cursor: pointer;
+  padding: 8px 8px;
+  margin-top: 20%;
+}
+
 .add-form button:hover {
   filter: brightness(90%);
 }
-</style>>
 </style>
