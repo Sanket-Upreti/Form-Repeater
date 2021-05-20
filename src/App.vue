@@ -69,7 +69,7 @@
                 >
               </select>
             </div>
-            <div class="for-name-pf">
+            <div class="for-name-pf" v-show="formValue.pf_Div">
               <label>pf_id</label>
               <input
                 type="text"
@@ -120,6 +120,7 @@ export default {
           date: "",
           content: "",
           pf: 0,
+          pf_Div: false,
           tiers: "",
           englishLang: "",
           frenchLang: "",
@@ -137,6 +138,7 @@ export default {
         content: "",
         tiers: "",
         pf: 0,
+        pf_Div: false,
         englishLang: "",
         frenchLang: "",
         Department: "",
@@ -161,9 +163,10 @@ export default {
       var date = new Date(this.formValues[index].date);
       var today = new Date();
       if (Math.floor((today - date) / (1000 * 60 * 60 * 24 * 30)) > 6) {
+        this.formValues[index].pf_Div = true;
         this.formValues[index].pf = 1 + Math.max(...this.index_values);
       } else {
-        this.formValues[index].pf = 0;
+        this.formValues[index].pf_Div = false;
         // }
         // if (Math.floor((today - date) / (1000 * 60 * 60 * 24 * 30)) > 6) {
         //   this.formValues[index].pf++;
